@@ -36,6 +36,41 @@ base_pos_1_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*base_pos_1_gen=//p'
 base_pos_2_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*base_pos_2_gen=//p' $cred_path; fi`
 base_pos_3_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*base_pos_3_gen=//p' $cred_path; fi`
 
+# Timer function
+timer () {
+  timerfile=$(mktemp)
+  progress() {
+    pc=0;
+    while [ -e $timerfile ]
+      do
+        echo -ne "$pc sec\033[0K\r"
+        sleep 1
+        ((pc++))
+      done
+  }
+  progress &
+}
+
+# Count fix solutions
+count_fix () {
+  while :; do
+    sed -n -e '/^\$GNGGA/p' $1 | awk -F "," '{ if ($7==4) print }' | echo $(wc -l) fix solutions
+    sleep 5
+  done
+}
+
+# Continue collecting points
+continue_rover () {
+  read -p "Add another point (y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+      /home/pi/BashRTKStation/rover.sh
+    else
+      exit
+    fi
+}
+
 # Menu
 PS3='Select: '
 options=(
@@ -75,13 +110,25 @@ do
         "RTK: USB sol+obs->file (combines with 1)")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
+            timer
+            filename="$(date +"%Y%m%d-%H%M%S")"
+            count_fix $dir/$filename$suffix & count_fix_pid=$!
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
+            # kill $count_fix_pid
+            rm -f $timerfile
+            continue_rover
             break
             ;;
         "RTK: TCP sol+obs->file (combines with 2 or 3)")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in tcpcli://localhost:3001 -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
+            timer
+            filename="$(date +"%Y%m%d-%H%M%S")"
+            count_fix $dir/$filename$suffix & count_fix_pid=$!
+            /home/pi/RTKLIB/app/str2str/gcc/str2str -in tcpcli://localhost:3001 -out file://$dir/$filename$suffix
+            # kill $count_fix_pid
+            rm -f $timerfile
+            continue_rover
             break
             ;;
         "SINGLE: USB sol+obs->TCP (standalone)")
