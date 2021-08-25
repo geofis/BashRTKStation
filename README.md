@@ -20,7 +20,7 @@ The basic hardware required is listed below:
 
 - A cell phone.
 
-A complete list of parts can be found [here](https://github.com/geofis/TouchRTKStation)
+A complete list of the parts needed can be found [here](https://github.com/geofis/TouchRTKStation).
 
 The software comprises the following:
 
@@ -34,11 +34,11 @@ Below I demonstrate (2X video) how I run the application. The demo was recorded 
 
 ![](img/showcase.gif)
 
-I usually start by opening VNC Viewer and connect to the RPi desktop. From there, I launch the `rover.sh` script, and select the option for sending RTCM messages from the base to the receiver. Automatically, the receiver generates RTK-fix solutions internally, and it send them back as NMEA messages. Simultaneously, I forward the NMEA messages via TCP from the RPi. This functionality allows the cell phone (or other devices capable of reading the TCP stream and connected to the same network) to display the precise position in real time. It is also possible to save the stream in a file locally, so everything is stored properly for future use.
+I usually start by opening VNC Viewer and connect to the RPi desktop. From there, I launch the [`rover.sh`](rover.sh) script, and select the option for sending RTCM messages from the base to the receiver. Automatically, the receiver generates RTK-fix solutions internally, and it send them back as NMEA messages. Simultaneously, I forward the NMEA messages via TCP from the RPi. This functionality allows the cell phone (or other devices capable of reading the TCP stream and connected to the same network) to display the precise position in real time. It is also possible to save the stream in a file locally, so everything is stored properly for future use.
 
 After starting the streaming, I leave VNC Viewer running and launch the NTRIP Client (Lefebure Design), and connect it to the streaming. The NTRIP Client generates a mock location and also shows details regarding the GNSS transmission, i.e. the status of the transmission, RTK solution type, *DOP, etc. I then launch SW Maps, which shows the position on a map in real time (an orange dot means "RTK-float", and a green dot "RTK-fix").
 
-After all of the above is up and running, I switch back to the RPi (via the VNC Viewer) and launch the same script again (`rover.sh`), but this time, I select one of the data collection modes. In the example, I select the option #5, which saves, in the RPI's microSD card, the solutions (NMEA messages) and the raw observations (UBX format) coming from the receiver into a single file. There are many reasons for storing the raw observations in the RPi, but the main one is to do post-processing (PPK) if necessary.
+After all of the above is up and running, I switch back to the RPi (via the VNC Viewer) and launch the same script again ([`rover.sh`](rover.sh)), but this time, I select one of the data collection modes. In the example, I select the option #5, which saves, in the RPI's microSD card, the solutions (NMEA messages) and the raw observations (UBX format) coming from the receiver into a single file. There are many reasons for storing the raw observations in the RPi, but the main one is to do post-processing (PPK) if necessary.
 
 When the script runs in collection mode, it reports two useful things in real time: 1) Collection time in seconds (with this receiver, you don't have to spend your whole life gripping the pole, 30 secs is usually enough); 2) Number of fixed solutions that are being saved.
 
