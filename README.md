@@ -3,6 +3,8 @@
 **Base-rover GNSS-RTK multi-band system, based on the u-blox ZED-F9P receiver, Raspberry Pi and RTKLIB** <br>
 *José Ramón Martínez Batlle, Universidad Autónoma de Santo Domingo (UASD), jmartinez19@uasd.edu.do*
 
+
+
 ## Capabalities
 
 Presently, the Bash scripts have capabilities for:
@@ -16,7 +18,7 @@ Presently, the Bash scripts have capabilities for:
 
 ## Materials
 
-The same materials as described [here](https://github.com/geofis/TouchRTKStation), but replacing the two NEO-M8T by two ZED-F9P.
+The same materials as described [here](https://github.com/geofis/TouchRTKStation), but replacing the NEO-M8T receivers by ZED-F9P receivers.
 
 ## TO-DO list:
 
