@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Rover
+Icon=preferences-system-search
+Exec=/home/pi/BashRTKStation/rover.sh
+Terminal=true
+Type=Application
+Categories=None;
+X-KeepTerminal=true

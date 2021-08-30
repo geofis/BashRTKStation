@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=ip
+Icon=preferences-system-privacy
+Exec=/home/pi/ip.sh
+Type=Application
+Categories=None;
