@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Reboot
 Icon=nm-stage01-connecting11
-Exec=/home/pi/reboot.sh
+Exec=/home/pi/BashRTKStation/sh/reboot.sh
 Type=Application
 Categories=None;

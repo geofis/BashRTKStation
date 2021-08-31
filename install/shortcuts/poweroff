@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=Apagar
-Icon=/home/pi/poweroff.png
-Exec=/home/pi/poweroff.sh
-Type=Application
-Categories=None;

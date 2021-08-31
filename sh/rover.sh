@@ -65,7 +65,7 @@ continue_rover () {
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
-      /home/pi/BashRTKStation/rover.sh
+      /home/pi/BashRTKStation/sh/rover.sh
     else
       exit
     fi
@@ -74,40 +74,40 @@ continue_rover () {
 # Menu
 PS3='Select: '
 options=(
-"NTRIP corr generic->rece"
-"NTRIP corr generic->rece & sol+obs->TCP"
-"NTRIP corr generic->rece & sol+obs->TCP & sol+obs->file"
-"RTK: USB sol+obs->file (combines with 1)"
-"RTK: TCP sol+obs->file (combines with 2 or 3)"
-"SINGLE: USB sol+obs->TCP (standalone)"
-"SINGLE: USB sol+obs->file (standalone)"
-"SINGLE: USB sol+obs->TCP & sol+obs->file (standalone)"
+"NTRIP corr gen->rec"
+"NTRIP corr gen->rec & sol+obs->TCP"
+"NTRIP corr gen->rec & sol+obs->TCP & file"
+"RTK: USB sol+obs->file (combn. with 1)"
+"RTK: TCP sol+obs->file (combn. with 2 or 3)"
+"SINGLE: USB sol+obs->TCP"
+"SINGLE: USB sol+obs->file"
+"SINGLE: USB sol+obs->TCP & file"
 "Create credentials"
 "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
-        "NTRIP corr generic->rece")
+        "NTRIP corr gen->rec")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1
             break
             ;;
-        "NTRIP corr generic->rece & sol+obs->TCP")
+        "NTRIP corr gen->rec & sol+obs->TCP")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1 &\
              /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}}
             break
             ;;
-        "NTRIP corr generic->rece & sol+obs->TCP & sol+obs->file")
+        "NTRIP corr gen->rec & sol+obs->TCP & file")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1 &\
              /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}} -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
             break
             ;;
-        "RTK: USB sol+obs->file (combines with 1)")
+        "RTK: USB sol+obs->file (combn. with 1)")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             timer
@@ -119,7 +119,7 @@ do
             continue_rover
             break
             ;;
-        "RTK: TCP sol+obs->file (combines with 2 or 3)")
+        "RTK: TCP sol+obs->file (combn. with 2 or 3)")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             timer
@@ -131,19 +131,19 @@ do
             continue_rover
             break
             ;;
-        "SINGLE: USB sol+obs->TCP (standalone)")
+        "SINGLE: USB sol+obs->TCP")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}}
             break
             ;;
-        "SINGLE: USB sol+obs->file (standalone)")
+        "SINGLE: USB sol+obs->file")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
             break
             ;;
-        "SINGLE: USB sol+obs->TCP & sol+obs->file (standalone)")
+        "SINGLE: USB sol+obs->TCP & file")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}} -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
@@ -152,7 +152,7 @@ do
         "Create credentials")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
-            /home/pi/BashRTKStation/create_credentials.sh
+            /home/pi/BashRTKStation/sh/create_credentials.sh
             break
             ;;
         "Quit")

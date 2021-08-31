@@ -28,6 +28,31 @@ The software comprises the following:
 
 - Ancillary apps: on the server side (a Raspberry Pi), RTKLIB package; on the client side (an Android mobile phone): VNC Viewer, SW Maps and Lefebure NTRIP Client
 
+## Installation
+
+1. Turn on your Raspberry Pi and connect it to the Internet. Update to the latest version of Raspberry OS. If you are using the old Raspbian Stretch, the compilation of RTKLIB will likely fail because of a `gfortran` issue.
+
+2. In the Raspberry Pi configuration app (`sudo raspi-config`), be sure to:
+
+    - Set a good resolution for your screen; a good resolution must be enough to fit windows without cropping them. I tested my RPi with 720x480.
+    - In the Interface options, activate VNC.
+    - In the Interface options, select Serial Port, disable login shell over serial port and finally enable serial port.
+
+3. Download BashRTKStation:
+
+```
+cd /home/pi/
+git clone https://github.com/geofis/BashRTKStation.git
+```
+4. Install the app and the ancillalry packages.
+
+```
+cd /home/pi/BashRTKStation/install
+sudo sh install.sh
+```
+
+Installation goes through updating the RPi, installing gfortran, xterm, gpsd, python gpsd, and compiling RTKLIB apps. Lastly, the credentials folder is created, as well as the Desktop shortcuts.
+
 ## How to use
 
 Below I demonstrate (2X video) how I run the application. The demo was recorded indoors using a laptop to integrate the windows all together, but the workflow is fully executed from the cell phone. The upper-left window shows an instance of VNC Viewer, which is used to control the RPi. The lower-left window is an instance of RTKPLOT (from RTKLIB), showing the position in real time. On the right half, a window shows the cell phone screen.

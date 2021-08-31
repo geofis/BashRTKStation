@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=U-Blox
-Icon=/home/pi/ublox.png
-Exec=/home/pi/ublox.sh
-Type=Application
-Categories=None;
