@@ -51,9 +51,17 @@ cd /home/pi/BashRTKStation/install
 sudo sh install.sh
 ```
 
-Installation goes through updating the RPi, installing gfortran, xterm, gpsd, python gpsd, and compiling RTKLIB apps. Lastly, the credentials folder is created, as well as the Desktop shortcuts.
+The installation goes through updating the RPi, installing gfortran, xterm, gpsd, python gpsd, and compiling RTKLIB apps. Lastly, the credentials folder is created, as well as the Desktop shortcuts.
 
 If you want to remotely access your Pi via Bluetooth, I recommend this [video](https://www.youtube.com/watch?v=zumnEOAk9aI) and this [step-by-step guide (in Spanish)](https://github.com/geofis/TouchRTKStation/blob/master/install/notas_para_configurar_bluetooth_punto_acceso_red).
+
+Additional recommended configuration:
+
+- In `.bashrc`, uncomment `alias ll='ls -l'`.
+- Create a directory for authorized ssh-keys in home (`mkdir -p .ssh/`). Then, from your PC `cat .ssh/id_rsa.pub | ssh pi@PINAME 'cat >> .ssh/authorized_keys'` (substitute PINAME for your RPi name).
+- Set a name for your RPi. To do so, `sudo nano /etc/hosts` and add this line at the end or edit the name of the IP: `127.0.1.1       rover`. Additionally, `sudo nano /etc/hostname` and write the name of the Pi in the file.
+- Upgrade your RPi: `sudo apt update && sudo apt full-upgrade`.
+- Change the wallpaper.
 
 ## How to use
 
