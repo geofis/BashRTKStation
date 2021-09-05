@@ -1,12 +1,18 @@
 #!/bin/bash
 
-echo "Send corrections to ROVER, receive solutions and observations"
+echo "
+Send corrections to ROVER,
+receive solutions and observations"
 
 # Verify credentials
 cred_path=/home/pi/BashRTKStation/.credentials/credentials
 if [ ! -f "$cred_path" ]
 then
-  read -p "File of credentials not found. For receiving or sending corrections, this file must be generated. ¿Create it now? [Y/n]: " -n 1 -r
+  read -p "
+File of credentials not found.
+For receiving or sending corrections,
+this file must be generated.
+¿Create it now? [Y/n]: " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
