@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Apagar
+Name=Poweroff
 Icon=/home/pi/BashRTKStation/img/poweroff.png
 Exec=/home/pi/BashRTKStation/sh/poweroff.sh
 Type=Application

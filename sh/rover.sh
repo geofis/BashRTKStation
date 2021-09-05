@@ -21,7 +21,7 @@ this file must be generated.
 fi
 
 # Dirs and files
-dir="/home/pi/arch_rtk"
+dir="/home/pi/rtk_files"
 suffix="-ubx-nmea-data.ubx"
 
 # Devices, streaming
