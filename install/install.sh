@@ -61,7 +61,7 @@ mkdir /home/pi/BashRTKStation/.credentials
 
 # Create directory for rtk files
 echo "\nCreating dir for rtk files\n"
-mkdir /home/pi/arch_rtk
+mkdir /home/pi/rtk_files
 
 chown pi:pi /home/pi/BashRTKStation/.credentials
 chown pi:pi /home/pi/arch_rtk
