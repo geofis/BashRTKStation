@@ -30,7 +30,7 @@ The software comprises the following:
 
 ## Installation
 
-1. Turn on your Raspberry Pi and connect it to the Internet. Update to the latest version of Raspberry OS. If you are using the old Raspbian Stretch, the compilation of RTKLIB will likely fail because of a `gfortran` issue.
+1. Turn your Raspberry Pi on and connect it to the Internet. Update to the latest version of Raspberry Pi OS. If you are using the old Raspbian Stretch, the compilation of RTKLIB will likely fail because of a `gfortran` issue.
 
 2. In the Raspberry Pi configuration app (`sudo raspi-config`), be sure to:
 
@@ -52,6 +52,8 @@ sudo sh install.sh
 ```
 
 Installation goes through updating the RPi, installing gfortran, xterm, gpsd, python gpsd, and compiling RTKLIB apps. Lastly, the credentials folder is created, as well as the Desktop shortcuts.
+
+If you want to remotely access your Pi via Bluetooth, I recommend this [video](https://www.youtube.com/watch?v=zumnEOAk9aI) and this [step-by-step guide (in Spanish)](https://github.com/geofis/TouchRTKStation/blob/master/install/notas_para_configurar_bluetooth_punto_acceso_red).
 
 ## How to use
 
