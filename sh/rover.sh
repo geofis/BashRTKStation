@@ -27,8 +27,8 @@ suffix="-ubx-nmea-data.ubx"
 # Devices, streaming
 usb_dev=ttyACM0
 usb_bps=230400
-serial_dev=ttyS0
-serial_bps=38400
+serial_dev=serial0
+serial_bps=115200
 outbound_tcp_port=3001
 
 # For corrections from generic source
@@ -103,14 +103,14 @@ do
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1 &\
-             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}}
+             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}
             break
             ;;
         "NTRIP corr gen->rec & sol+obs->TCP & file")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1 &\
-             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}} -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
+             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port} -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
             break
             ;;
         "RTK: USB sol+obs->file (combn. with 1)")
