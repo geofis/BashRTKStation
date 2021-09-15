@@ -64,7 +64,7 @@ echo "\nCreating dir for rtk files\n"
 mkdir /home/pi/rtk_files
 
 chown pi:pi /home/pi/BashRTKStation/.credentials
-chown pi:pi /home/pi/arch_rtk
+chown pi:pi /home/pi/rtk_files
 
 # Copy shortcuts to desktop
 echo "\nCopying shortcuts to Desktop ...\n"

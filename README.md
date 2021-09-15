@@ -34,9 +34,11 @@ The software comprises the following:
 
 2. In the Raspberry Pi configuration app (`sudo raspi-config`), be sure to:
 
-    - Set a good resolution for your screen; a good resolution must be enough to fit windows without cropping them. I tested my RPi with 720x480.
+    - Upgrade your RPi: `sudo apt update && sudo apt full-upgrade`.
+    - Set a good resolution for your screen; a good resolution must be enough to fit windows without cropping them. I tested my RPi with 800x600.
     - In the Interface options, activate VNC.
     - In the Interface options, select Serial Port, disable login shell over serial port and finally enable serial port.
+    - In `/boot/config.txt`, if not present, add the following line at the end of the file `core_freq=250`. This ensure a slight increase in serial port performance, needed to trasnmit the RTCM corrections to the ZED unit. Alternatively, you can swap the ports with by adding the line `dtoverlay=pi3-miniuart-bt` to `/boot/config.txt`, so the miniuart port is assigned to the Bluetooth service, and the higher performance UART is dedicated to pins 14 and 15 of the GPIO bar.
 
 3. Download BashRTKStation:
 
@@ -60,7 +62,6 @@ Additional recommended configuration:
 - In `.bashrc`, uncomment `alias ll='ls -l'`.
 - Create a directory for authorized ssh-keys in home (`mkdir -p .ssh/`). Then, from your PC `cat .ssh/id_rsa.pub | ssh pi@PINAME 'cat >> .ssh/authorized_keys'` (substitute PINAME for your RPi name).
 - Set a name for your RPi. To do so, `sudo nano /etc/hosts` and add this line at the end or edit the name of the IP: `127.0.1.1       rover`. Additionally, `sudo nano /etc/hostname` and write the name of the Pi in the file.
-- Upgrade your RPi: `sudo apt update && sudo apt full-upgrade`.
 - Change the wallpaper.
 
 ## How to use
