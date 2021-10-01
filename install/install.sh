@@ -77,9 +77,14 @@ echo "xterm*renderFont: true" >> /home/pi/.Xresources
 chown pi:pi /home/pi/.Xresources
 systemctl restart display-manager
 
+# Creating services
+cp /home/pi/BashRTKStation/services/usb2tcp.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable usb2tcp.service
+
 # Final message
 echo "If you want the Desktop icons to launch without asking, open a File Manager window, go to 'Edit > Preferences > General' and check option 'Don't ask options on launch executable"
 
 # Press enter to quit
-read -p "Press ENTER to quit" x
+read -p "Please REBOOT. Press ENTER to quit" x
 

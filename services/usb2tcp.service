@@ -1,0 +1,10 @@
+
+[Unit]
+Description=Broadcast solutions to TCP port
+
+[Service]
+ExecStart=/bin/bash /home/pi/BashRTKStation/sh/usb2tcp.sh
+
+[Install]
+WantedBy=multi-user.target
+
