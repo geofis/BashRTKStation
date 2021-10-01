@@ -76,78 +76,21 @@ continue_rover () {
 # Menu
 PS3='Select: '
 options=(
-"CORR: NTRIP corr->rec"
-"CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP"
-"CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP & file"
-"SOLS: USB sol+obs->TCP (combn. w/ 1 or ser.)"
-"SOLS: USB sol+obs->file (combn. w/ 1 or ser.)"
-"SOLS: USB sol+obs->TCP & file (combn. w/ 1 or ser.)"
-"SOLS: TCP sol+obs->file (combn. w/ 2 or 4)"
+"CORRECTIONS: NTRIP corr->rec"
+"SOLUTIONS: TCP sol+obs->file"
 "View/modify credentials"
 "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
-        "CORR: NTRIP corr->rec")
+        "CORRECTIONS: NTRIP corr->rec")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1
             continue_rover
             break
             ;;
-        "CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1 &\
-             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}
-            continue_rover
-            break
-            ;;
-        "CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP & file")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            timer
-            filename="$(date +"%Y%m%d-%H%M%S")"
-            count_fix $dir/$filename$suffix & count_fix_pid=$!
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1 &\
-             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port} -out file://$dir/$filename$suffix
-            # kill $count_fix_pid
-            rm -f $timerfile
-            continue_rover
-            break
-            ;;
-        "SOLS: USB sol+obs->file (combn. w/ 1 or ser.)")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            timer
-            filename="$(date +"%Y%m%d-%H%M%S")"
-            count_fix $dir/$filename$suffix & count_fix_pid=$!
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out file://$dir/$filename$suffix
-            # kill $count_fix_pid
-            rm -f $timerfile
-            continue_rover
-            break
-            ;;
-        "SOLS: USB sol+obs->TCP (combn. w/ 1 or ser.)")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}
-            continue_rover
-            break
-            ;;
-        "SOLS: USB sol+obs->TCP & file (combn. w/ 1 or ser.)")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            timer
-            filename="$(date +"%Y%m%d-%H%M%S")"
-            count_fix $dir/$filename$suffix & count_fix_pid=$!
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}} -out file://$dir/$filename$suffix
-            # kill $count_fix_pid
-            rm -f $timerfile
-            continue_rover
-            break
-            ;;
-        "SOLS: TCP sol+obs->file (combn. with 2 or 3)")
+        "SOLUTIONS: TCP sol+obs->file")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             timer

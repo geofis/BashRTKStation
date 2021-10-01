@@ -17,11 +17,11 @@ do
 done
 
 PS3='Select an option: '
-options=("Create credentials" "Quit")
+options=("View/modify credentials" "Quit")
 select opt in "${options[@]}"
 do
   case $opt in
-    "Create credentials")
+    "View/modify credentials")
       echo "Selected: $opt"
 
       corr_user_gen0=`awk -F '=' '$1=="corr_user_gen" {print $2}' $target_path`
