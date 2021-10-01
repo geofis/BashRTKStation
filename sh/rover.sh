@@ -37,10 +37,6 @@ corr_addr_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*corr_addr_gen=//p' $
 corr_port_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*corr_port_gen=//p' $cred_path; fi`
 corr_pw_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*corr_pw_gen=//p' $cred_path; fi`
 corr_mp_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*corr_mp_gen=//p' $cred_path; fi`
-base_pos_type_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*base_pos_type_gen=//p' $cred_path; fi`
-base_pos_1_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*base_pos_1_gen=//p' $cred_path; fi`
-base_pos_2_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*base_pos_2_gen=//p' $cred_path; fi`
-base_pos_3_gen=`if [ -f "$cred_path" ]; then sed -n -e 's/^.*base_pos_3_gen=//p' $cred_path; fi`
 
 # Timer function
 timer () {
@@ -67,7 +63,7 @@ count_fix () {
 
 # Continue collecting points
 continue_rover () {
-  read -p "Add another point (y/n): " -n 1 -r
+  read -p "Reload menu? (y/n): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
@@ -80,52 +76,78 @@ continue_rover () {
 # Menu
 PS3='Select: '
 options=(
-"NTRIP corr gen->rec"
-"NTRIP corr gen->rec & sol+obs->TCP"
-"NTRIP corr gen->rec & sol+obs->TCP & file"
-"RTK: USB sol+obs->file (combn. with 1)"
-"RTK: TCP sol+obs->file (combn. with 2 or 3)"
-"SINGLE: USB sol+obs->TCP"
-"SINGLE: USB sol+obs->file"
-"SINGLE: USB sol+obs->TCP & file"
-"Create credentials"
+"CORR: NTRIP corr->rec"
+"CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP"
+"CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP & file"
+"SOLS: USB sol+obs->TCP (combn. w/ 1 or ser.)"
+"SOLS: USB sol+obs->file (combn. w/ 1 or ser.)"
+"SOLS: USB sol+obs->TCP & file (combn. w/ 1 or ser.)"
+"SOLS: TCP sol+obs->file (combn. w/ 2 or 4)"
+"View/modify credentials"
 "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
-        "NTRIP corr gen->rec")
+        "CORR: NTRIP corr->rec")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1
+            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1
+            continue_rover
             break
             ;;
-        "NTRIP corr gen->rec & sol+obs->TCP")
+        "CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1 &\
+            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1 &\
              /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}
+            continue_rover
             break
             ;;
-        "NTRIP corr gen->rec & sol+obs->TCP & file")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen $base_pos_type_gen $base_pos_1_gen $base_pos_2_gen $base_pos_3_gen  -out serial://$serial_dev:$serial_bps:8:n:1 &\
-             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port} -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
-            break
-            ;;
-        "RTK: USB sol+obs->file (combn. with 1)")
+        "CORR+SOLS: NTRIP corr->rec & USB sol+obs->TCP & file")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             timer
             filename="$(date +"%Y%m%d-%H%M%S")"
             count_fix $dir/$filename$suffix & count_fix_pid=$!
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
+            /home/pi/RTKLIB/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1 &\
+             /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port} -out file://$dir/$filename$suffix
             # kill $count_fix_pid
             rm -f $timerfile
             continue_rover
             break
             ;;
-        "RTK: TCP sol+obs->file (combn. with 2 or 3)")
+        "SOLS: USB sol+obs->file (combn. w/ 1 or ser.)")
+            echo "Selected: $opt"
+            echo -ne "\033]0;$opt\007"
+            timer
+            filename="$(date +"%Y%m%d-%H%M%S")"
+            count_fix $dir/$filename$suffix & count_fix_pid=$!
+            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out file://$dir/$filename$suffix
+            # kill $count_fix_pid
+            rm -f $timerfile
+            continue_rover
+            break
+            ;;
+        "SOLS: USB sol+obs->TCP (combn. w/ 1 or ser.)")
+            echo "Selected: $opt"
+            echo -ne "\033]0;$opt\007"
+            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}
+            continue_rover
+            break
+            ;;
+        "SOLS: USB sol+obs->TCP & file (combn. w/ 1 or ser.)")
+            echo "Selected: $opt"
+            echo -ne "\033]0;$opt\007"
+            timer
+            filename="$(date +"%Y%m%d-%H%M%S")"
+            count_fix $dir/$filename$suffix & count_fix_pid=$!
+            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}} -out file://$dir/$filename$suffix
+            # kill $count_fix_pid
+            rm -f $timerfile
+            continue_rover
+            break
+            ;;
+        "SOLS: TCP sol+obs->file (combn. with 2 or 3)")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             timer
@@ -137,28 +159,11 @@ do
             continue_rover
             break
             ;;
-        "SINGLE: USB sol+obs->TCP")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}}
-            break
-            ;;
-        "SINGLE: USB sol+obs->file")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
-            break
-            ;;
-        "SINGLE: USB sol+obs->TCP & file")
-            echo "Selected: $opt"
-            echo -ne "\033]0;$opt\007"
-            /home/pi/RTKLIB/app/str2str/gcc/str2str -in serial://${usb_dev}:${usb_bps}:8:n:1 -out tcpsvr://localhost:${outbound_tcp_port}} -out file://$dir/"$(date +"%Y%m%d-%H%M%S")"$suffix
-            break
-            ;;
-        "Create credentials")
+        "View/modify credentials")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
             /home/pi/BashRTKStation/sh/create_credentials.sh
+            continue_rover
             break
             ;;
         "Quit")
