@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=U-Blox
-Icon=/home/pi/BashRTKStation/img/ublox.png
-Exec=/home/pi/BashRTKStation/sh/ublox.sh
-Type=Application
-Categories=None;

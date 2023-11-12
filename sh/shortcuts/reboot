@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=Reboot
-Icon=/home/pi/BashRTKStation/img/reboot.png
-Exec=/home/pi/BashRTKStation/sh/reboot.sh
-Type=Application
-Categories=None;

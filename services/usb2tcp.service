@@ -3,7 +3,7 @@
 Description=Broadcast solutions to TCP port
 
 [Service]
-ExecStart=/bin/bash /home/pi/BashRTKStation/sh/usb2tcp.sh
+ExecStart=/bin/bash /usr/local/bin/usb2tcp.sh
 
 [Install]
 WantedBy=multi-user.target
