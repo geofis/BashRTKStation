@@ -1,6 +1,10 @@
 
 [Unit]
 Description=Broadcast solutions to TCP port
+After=network-online.target
+Wants=network-online.target
+After=dev-ttyACM0.device
+Wants=dev-ttyACM0.device
 
 [Service]
 ExecStart=/bin/bash /usr/local/bin/usb2tcp.sh
@@ -8,3 +12,6 @@ ExecStart=/bin/bash /usr/local/bin/usb2tcp.sh
 [Install]
 WantedBy=multi-user.target
 
+[Service]
+Restart=on-failure
+RestartSec=10s

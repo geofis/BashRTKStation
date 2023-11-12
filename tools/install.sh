@@ -1,66 +1,96 @@
 #!/bin/bash
 
+# Delete variables file
+#rm /usr/local/bin/variables.sh
+
 # Variables
 source variables.sh
+source user_variables.sh
+
+# Backup files
+echo "Creating backup copies..."
+sudo cp "$BOOT_DIR/cmdline.txt" "$BOOT_DIR/cmdline_backup.txt"
+sudo cp "$BOOT_DIR/config.txt" "$BOOT_DIR/config_backup.txt"
+
+# Enable UART in config.txt
+echo "Enabling UART in config.txt..."
+if grep -q "enable_uart=1" "$BOOT_DIR/config.txt"; then
+    echo "UART is already enabled"
+else
+    sudo sh -c "echo 'enable_uart=1' >> $BOOT_DIR/config.txt"
+fi
+
+# Delete console access from serial
+echo "Disabling serial console in cmdline.txt..."
+sudo sed -i 's/console=serial0,115200 //' "$BOOT_DIR/cmdline.txt"
 
 # Changing to user dir
-echo "\nChanging to user dir ...\n"
+echo "Changing to user dir ..."
 cd $USER_DIR
 
 # Updating packages
-echo "\nUpdating packages information from sources ...\n"
+echo "Updating packages information from sources ..."
 apt-get update -y
 
 # Install gfortran
-echo "\nInstalling gfortran ...\n"
+echo "Installing gfortran ..."
 apt install -y gfortran
 
 # Install gpsd
-echo "\nInstalling gpsd, gpsd-clients and python-gps ...\n"
+echo "Installing gpsd, gpsd-clients and python-gps ..."
 #apt install -y gpsd gpsd-clients python-gps
 
-# Install RTKLIB
-echo "\nRemoving older versions of RTKLIB repo ...\n"
-rm -rf $RTKLIB_DIR
-echo "\nDownloading RTKLIB repo ...\n"
-git clone https://github.com/rtklibexplorer/RTKLIB.git
+# Check for --no-rtklib-compile flag
+if [ "$1" != "--skip-rtklib" ]; then
+  # Install RTKLIB
+  echo "Removing older versions of RTKLIB repo ..."
+  rm -rf $RTKLIB_DIR
+  echo "Downloading RTKLIB repo ..."
+  sudo -u $USERNAME git clone https://github.com/rtklibexplorer/RTKLIB.git
 
-# Symlink app dir
-echo "\nSymlinking RTKLIB directory structure for compatibility ...\n"
-ln -s $USER_DIR/$RTKLIB_DIR/app/consapp/* $USER_DIR/$RTKLIB_DIR/app/
+  # Symlink app dir
+  echo "Symlinking RTKLIB directory structure for compatibility ..."
+  ln -s $USER_DIR/$RTKLIB_DIR/app/consapp/* $USER_DIR/$RTKLIB_DIR/app/
 
-# Compile RTKLIB executables
-echo "\nCompilling str2str app (this may take a while) ...\n"
-cd ./$RTKLIB_DIR/app/str2str/gcc/
-make
+  # Compile RTKLIB executables
+  echo "Compilling str2str app (this may take a while) ..."
+  cd ./$RTKLIB_DIR/app/str2str/gcc/
+  make
+  mv str2str $BIN_DIR/
 
-#echo "\nCompilling rtkrcv app (this may take a while) ...\n"
-#cd ../../rtkrcv/gcc/
-#make
+  #echo "Compilling rtkrcv app (this may take a while) ..."
+  #cd ../../rtkrcv/gcc/
+  #make
+  #mv rtkrcv $BIN_DIR/
 
-#echo "\nCompiling convbin app (this may take a while) ...\n"
-#cd ../../convbin/gcc/
-#make
+  #echo "Compiling convbin app (this may take a while) ..."
+  #cd ../../convbin/gcc/
+  #make
+  #mv convbin $BIN_DIR/
 
-echo "\nCompiling iers app ...\n"
-cd ../../../lib/iers/gcc
-make
+  echo "Compiling iers app ..."
+  cd ../../../lib/iers/gcc
+  make
+  #cp iers $BIN_DIR/
 
-#echo "\nCompiling rnx2rtkp app (this may take a while) ...\n"
-#cd ../../../app/rnx2rtkp/gcc
-#make
+  #echo "Compiling rnx2rtkp app (this may take a while) ..."
+  #cd ../../../app/rnx2rtkp/gcc
+  #make
+  #mv rnx2rtkp $BIN_DIR/
 
-echo "\nCompiling pos2kml app ...\n"
-cd ../../pos2kml/gcc/
-make
+  echo "Compiling pos2kml app ..."
+  cd ../../pos2kml/gcc/
+  make
+  #mv pos2kml $BIN_DIR/
+fi
 
 # Create directory for credentials
-echo "\nCreating dir for credentials file ...\n"
-mkdir $USER_DIR/$APP_NAME/$CREDENTIALS_DIR
+echo "Creating dir for credentials file ..."
+sudo -u $USERNAME mkdir $USER_DIR/$APP_NAME/$CREDENTIALS_DIR
 
 # Create directory for rtk files
-echo "\nCreating dir for rtk files\n"
-mkdir $USER_DIR/$RTK_FILES_DIR
+echo "Creating dir for rtk files"
+sudo -u $USERNAME mkdir $USER_DIR/$RTK_FILES_DIR
 
 # Set dir ownership
 chown $USERNAME:$USERNAME $USER_DIR/$APP_NAME/$CREDENTIALS_DIR
@@ -73,6 +103,8 @@ cp $USER_DIR/$APP_NAME/$TOOLS_DIR/$CREDENTIALS_SCRIPT $BIN_DIR/
 chmod +x $BIN_DIR/$CREDENTIALS_SCRIPT
 cp $USER_DIR/$APP_NAME/$TOOLS_DIR/$VARIABLES_FILE $BIN_DIR/
 chmod +x $BIN_DIR/$VARIABLES_FILE
+cp $USER_DIR/$APP_NAME/$TOOLS_DIR/$USER_VARIABLES_FILE $BIN_DIR/
+chmod +x $BIN_DIR/$USER_VARIABLES_FILE
 cp $USER_DIR/$APP_NAME/$TOOLS_DIR/$USB2TCP_SCRIPT $BIN_DIR/
 chmod +x $BIN_DIR/$USB2TCP_SCRIPT
 

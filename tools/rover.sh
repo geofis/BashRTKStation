@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source variables.sh
+source user-variables.sh
 
 echo "
 Send corrections to ROVER,
@@ -88,7 +89,7 @@ do
         "CORRECTIONS: NTRIP corr->rec")
             echo "Selected: $opt"
             echo -ne "\033]0;$opt\007"
-            $USER_DIR/$RTKLIB_DIR/app/str2str/gcc/str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1
+            str2str -in ntrip://$corr_user_gen:$corr_pw_gen@$corr_addr_gen:$corr_port_gen/$corr_mp_gen -out serial://$serial_dev:$serial_bps:8:n:1
             continue_rover
             break
             ;;
@@ -98,7 +99,7 @@ do
             timer
             filename="$(date +"%Y%m%d-%H%M%S")"
             count_fix $dir/$filename$suffix & count_fix_pid=$!
-            $USER_DIR/$RTKLIB_DIR/app/str2str/gcc/str2str -in tcpcli://localhost:$outbound_tcp_port -out file://$dir/$filename$suffix
+            str2str -in tcpcli://localhost:$outbound_tcp_port -out file://$dir/$filename$suffix
             # kill $count_fix_pid
             rm -f $timerfile
             continue_rover

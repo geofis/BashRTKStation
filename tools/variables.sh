@@ -1,6 +1,5 @@
 # Variables
-USERNAME=$USER
-USER_DIR="$HOME"
+BOOT_DIR="/boot"
 APP_NAME="BashRTKStation"
 RTKLIB_DIR="RTKLIB"
 ROVER_SCRIPT="rover.sh"
@@ -12,6 +11,7 @@ TOOLS_DIR="tools"
 SERVICES_DIR="services"
 BIN_DIR="/usr/local/bin"
 VARIABLES_FILE="variables.sh"
+USER_VARIABLES_FILE="user_variables.sh"
 USB_DEV="ttyACM0"
 USB_BPS=230400
 SERIAL_DEV=serial0
