@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source variables.sh
-source user-variables.sh
+source user_variables.sh
 
 echo "
 Send corrections to ROVER,
