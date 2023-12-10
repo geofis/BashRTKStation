@@ -49,8 +49,8 @@ git clone https://github.com/geofis/BashRTKStation.git
 4. Install the app and the ancillalry packages.
 
 ```
-cd /home/pi/BashRTKStation/install
-sudo sh install.sh
+cd /home/pi/BashRTKStation/tools
+sudo bash install.sh
 ```
 
 The installation goes through updating the RPi, installing gfortran, xterm, gpsd, python gpsd, and compiling RTKLIB apps. Lastly, the credentials folder is created, as well as the Desktop shortcuts.

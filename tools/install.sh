@@ -9,20 +9,20 @@ source user_variables.sh
 
 # Backup files
 echo "Creating backup copies..."
-sudo cp "$BOOT_DIR/cmdline.txt" "$BOOT_DIR/cmdline_backup.txt"
-sudo cp "$BOOT_DIR/config.txt" "$BOOT_DIR/config_backup.txt"
+sudo cp "$BOOT_DIR/firmware/cmdline.txt" "$BOOT_DIR/firmware/cmdline_backup.txt"
+sudo cp "$BOOT_DIR/firmare/config.txt" "$BOOT_DIR/firmware/config_backup.txt"
 
 # Enable UART in config.txt
 echo "Enabling UART in config.txt..."
-if grep -q "enable_uart=1" "$BOOT_DIR/config.txt"; then
+if grep -q "enable_uart=1" "$BOOT_DIR/firmware/config.txt"; then
     echo "UART is already enabled"
 else
-    sudo sh -c "echo 'enable_uart=1' >> $BOOT_DIR/config.txt"
+    sudo sh -c "echo 'enable_uart=1' >> $BOOT_DIR/firmware/config.txt"
 fi
 
 # Delete console access from serial
 echo "Disabling serial console in cmdline.txt..."
-sudo sed -i 's/console=serial0,115200 //' "$BOOT_DIR/cmdline.txt"
+sudo sed -i 's/console=serial0,115200 //' "$BOOT_DIR/firmware/cmdline.txt"
 
 # Changing to user dir
 echo "Changing to user dir ..."
@@ -37,7 +37,7 @@ echo "Installing gfortran ..."
 apt install -y gfortran
 
 # Install gpsd
-echo "Installing gpsd, gpsd-clients and python-gps ..."
+#echo "Installing gpsd, gpsd-clients and python-gps ..."
 #apt install -y gpsd gpsd-clients python-gps
 
 # Check for --no-rtklib-compile flag
