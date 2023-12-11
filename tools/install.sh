@@ -10,7 +10,7 @@ source user_variables.sh
 # Backup files
 echo "Creating backup copies..."
 sudo cp "$BOOT_DIR/firmware/cmdline.txt" "$BOOT_DIR/firmware/cmdline_backup.txt"
-sudo cp "$BOOT_DIR/firmare/config.txt" "$BOOT_DIR/firmware/config_backup.txt"
+sudo cp "$BOOT_DIR/firmware/config.txt" "$BOOT_DIR/firmware/config_backup.txt"
 
 # Enable UART in config.txt
 echo "Enabling UART in config.txt..."
@@ -115,7 +115,7 @@ if [ "$1" != "--skip-rtklib" ]; then
   #mv rnx2rtkp $BIN_DIR/
 
   echo "Compiling pos2kml app ..."
-  cd ../../pos2kml/gcc/
+  cd $USER_DIR/$RTKLIB_DIR/app/pos2kml/gcc/
   make
   #mv pos2kml $BIN_DIR/
 fi
