@@ -25,10 +25,10 @@ fi
 
 # Dirs and files
 dir=$USER_DIR/$RTK_FILES_DIR
-suffix="-ubx-nmea-data.ubx"
+suffix_unicore="-unicore-nmea-data.log"
 
 # Devices, streaming
-usb_dev=$USB_DEV
+usb_dev=$USB_DEV_2
 usb_bps=$USB_BPS
 serial_dev=$SERIAL_DEV
 serial_bps=$SERIAL_BPS
@@ -59,7 +59,7 @@ timer () {
 # Count fix solutions
 count_fix () {
   while :; do
-    sed -n -e '/^\$GNGGA/p' $1 | awk -F "," '{ if ($7==4) print }' | echo $(wc -l) fix solutions
+    sed -n -e '/\$GNGGA/p' $1 | awk -F "," '{ if ($7==4) print }' | echo $(wc -l) fix solutions
     sleep 5
   done
 }
@@ -98,8 +98,8 @@ do
             echo -ne "\033]0;$opt\007"
             timer
             filename="$(date +"%Y%m%d-%H%M%S")"
-            count_fix $dir/$filename$suffix & count_fix_pid=$!
-            str2str -in tcpcli://localhost:$outbound_tcp_port -out file://$dir/$filename$suffix
+            count_fix $dir/$filename$suffix_unicore & count_fix_pid=$!
+            str2str -in tcpcli://localhost:$outbound_tcp_port -out file://$dir/$filename$suffix_unicore
             # kill $count_fix_pid
             rm -f $timerfile
             continue_rover

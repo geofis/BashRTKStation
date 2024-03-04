@@ -1,3 +1,3 @@
 # User variables
-USERNAME=$(logname)
-USER_DIR="/home/$(logname)"
+USERNAME="pi"
+USER_DIR="/home/$USERNAME"

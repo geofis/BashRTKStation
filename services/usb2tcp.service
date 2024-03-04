@@ -5,6 +5,8 @@ After=network-online.target
 Wants=network-online.target
 After=dev-ttyACM0.device
 Wants=dev-ttyACM0.device
+After=dev-ttyUSB0.device
+Wants=dev-ttyUSB0.device
 
 [Service]
 ExecStart=/bin/bash /usr/local/bin/usb2tcp.sh
